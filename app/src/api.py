@@ -23,6 +23,6 @@ class API(AbstractAPI):
              validators.InvalidURLError,
              requests.ConnectionError
         """
-        url = validators.url(url_raw)  # Raises: InvalidURLError
-        response = requests.get(url)  # Raises: ConnectionError
+        url = validators.url(url_raw)
+        response = requests.get(url)
         return response
