@@ -3,6 +3,7 @@ from typing import Iterable
 
 import aiohttp
 import requests
+from aiohttp import ClientTimeout
 
 from app.src import Logger
 
@@ -17,17 +18,18 @@ class API(object):
         urls: Iterable[str], bounded_semaphore: asyncio.BoundedSemaphore
     ) -> Iterable[aiohttp.ClientResponse]:
         async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
+            connector=aiohttp.TCPConnector(
+                ssl=None,
+                enable_cleanup_closed=True
+            ),
+            timeout=ClientTimeout(60)
         ) as session:
             tasks = [
                 API.__async__fetch_url(session, url, bounded_semaphore)
                 for url in urls
             ]
-            responses: Iterable[aiohttp.ClientResponse] = await asyncio.gather(
-                *tasks)
-            for response in responses:
-                Logger.info(f"{response.url.__str__()} - {response.status}")
-                # response.html = await response.text()
+            responses: Iterable[aiohttp.ClientResponse] = \
+                await asyncio.gather(*tasks)
 
             return responses
 
@@ -37,9 +39,14 @@ class API(object):
         url: str,
         bounded_semaphore: asyncio.BoundedSemaphore
     ) -> aiohttp.ClientResponse:
-        async with \
-            bounded_semaphore, session.get(url, allow_redirects=True) \
-                as response:
-            # I should not probably await anything here
-            response.html = await response.text(encoding="utf-8")
-            return response
+        try:
+            async with \
+                bounded_semaphore, session.get(url, allow_redirects=True) \
+                    as response:
+                # I should not probably await anything here
+                response.html = await response.text(encoding="utf-8")
+                Logger.info(f"{response.url.__str__()} - {response.status}")
+
+                return response
+        except Exception as error:
+            Logger.error(f"Unable to get `{url}` due to error: {error}")
