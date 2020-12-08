@@ -2,6 +2,8 @@ import asyncio
 from collections import defaultdict
 from typing import Dict, Iterable, Callable, List
 
+from memory_profiler import memory_usage
+
 from app import AppProvider
 from app.src import Logger
 from app.src.api import API
@@ -22,10 +24,16 @@ class CLILoadProvider(AppProvider):
 
     def __init__(self):
         super().__init__()
+
         self.async_loop = asyncio.get_event_loop()
         self.bounded_semaphore = \
             asyncio.BoundedSemaphore(self.cli_arguments.bounded_semaphore)
         self.load()
+
+        Logger.info(
+            f"Peak memory usage: "
+            f"{max(memory_usage(proc=self.load))} MiB"
+        )
 
     def load(self):
         """
