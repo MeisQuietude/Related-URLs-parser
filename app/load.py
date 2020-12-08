@@ -23,7 +23,8 @@ class CLILoadProvider(AppProvider):
     def __init__(self):
         super().__init__()
         self.async_loop = asyncio.get_event_loop()
-        self.bounded_semaphore = asyncio.BoundedSemaphore(value=100)
+        self.bounded_semaphore = \
+            asyncio.BoundedSemaphore(self.cli_arguments.bounded_semaphore)
         self.load()
 
     def load(self):
@@ -75,7 +76,7 @@ class CLILoadProvider(AppProvider):
             f"new - {len(urls_to_load)})"
         )
 
-    # Request & parse URLs
+        # Request & parse URLs
         parsed_urls = await \
             self.request_and_parse_related_urls_async(urls_to_load)
 
@@ -93,18 +94,6 @@ class CLILoadProvider(AppProvider):
 
         # Rerun to depth + 1
         if current_depth < self.cli_arguments.depth:
-            for href in self.urls_map_by_depth[current_depth]:
-                href_ = URL.prepare_url(href)
-                parsed_url = self.urls_map.get(href_, None)
-                if parsed_url is not None:
-                    self.urls_map_by_depth[current_depth + 1].extend(
-                        self.get_adjust_related_hrefs(
-                            parsed_url.url, parsed_url.html_parsed
-                        )
-                    )
-                else:
-                    Logger.warning(f"Something wrong with request {href_}")
-
             await self.start_load_in_depth(current_depth + 1)
 
     async def request_and_parse_related_urls_async(
