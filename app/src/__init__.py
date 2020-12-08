@@ -3,7 +3,7 @@ import logging
 from app.src.cli import args
 
 logging.basicConfig(
-    format="[%(asctime)s] %(name)-8s %(levelname)-8s - %(funcName)s:%(lineno)d %(message)s",
+    format="[%(asctime)s] %(name)-8s %(levelname)-8s - %(funcName)s:%(lineno)d - %(message)s",
     datefmt="%y-%m-%dT%H:%M:%S.%s",
     level=logging.DEBUG
 )
