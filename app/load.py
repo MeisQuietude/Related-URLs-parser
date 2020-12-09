@@ -31,7 +31,7 @@ class CLILoadProvider(AppProvider):
 
         Logger.info(
             f"Peak memory usage: "
-            f"{max(memory_usage(proc=self.load))} MiB"
+            f"{max(memory_usage(proc=self.load, max_iterations=1))} MiB"
         )
 
     def load(self):
@@ -43,7 +43,12 @@ class CLILoadProvider(AppProvider):
         Allowed parameters (CLI):
         - (-d, --depth) - a depth of parsing URLs
         """
-        html_raw = API.get(self.start_url).text
+        response = API.get(self.start_url)
+        if response is None:
+            Logger.error("Please check URL and retry later...")
+            return
+
+        html_raw = response.text
         html_parsed = ParserBS(html_raw)
 
         url_data = URL(self.start_url, html_parsed)
@@ -110,6 +115,8 @@ class CLILoadProvider(AppProvider):
 
         parsed_urls = []
         for response in responses:  # Probably large memory usage here
+            if response is None:
+                continue
             url = response.url.__str__()
             html = response.html  # Initialized in API class
             parsed_url = self.map_to_parsed_url(url, html)
