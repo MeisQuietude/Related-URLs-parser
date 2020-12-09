@@ -7,3 +7,16 @@ services:
       - /etc/passwd:/etc/passwd:cached
       - /etc/group:/etc/group:cached
       - .:/app:cached
+    depends_on:
+      - db
+    networks:
+      - default_network
+  db:
+    image: postgres:12
+    volumes:
+      - "./pg_data/:/var/lib/postgresql/data"
+    networks:
+      - default_network
+
+networks:
+  default_network:
