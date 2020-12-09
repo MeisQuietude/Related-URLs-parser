@@ -2,12 +2,22 @@ import logging
 
 from app.src.cli import args
 
+debug_msg_format = (
+    "[%(asctime)s] "
+    "%(levelname)-8s "
+    "-  %(funcName)s "
+    "- %(filename)s:%(lineno)d - %(message)s"
+)
+info_msg_format = (
+    "[%(asctime)s] "
+    "%(levelname)-8s "
+    "- %(message)s"
+)
+
 logging.basicConfig(
-    format="[%(asctime)s] "
-           "%(name)-8s "
-           "%(levelname)-8s "
-           "-  %(funcName)s "
-           "- %(filename)s:%(lineno)d - %(message)s",
+    format=(debug_msg_format if
+            args.log_level.upper() == "DEBUG" else
+            info_msg_format),
     datefmt="%y-%m-%dT%H:%M:%S.%s",
     level=logging.DEBUG
 )
