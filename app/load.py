@@ -28,7 +28,6 @@ class CLILoadProvider(AppProvider):
         self.async_loop = asyncio.get_event_loop()
         self.bounded_semaphore = \
             asyncio.BoundedSemaphore(self.cli_arguments.bounded_semaphore)
-        self.load()
 
         Logger.info(
             f"Peak memory usage: "
