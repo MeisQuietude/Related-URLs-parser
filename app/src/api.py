@@ -11,7 +11,12 @@ from app.src import Logger
 class API(object):
     @staticmethod
     def get(url: str):
-        return requests.get(url)
+        try:
+            return requests.get(url)
+        except Exception as error:
+            Logger.error(
+                f"Unable to get `{url}` due to error: {type(error)}"
+            )
 
     @staticmethod
     async def fetch_urls_async(
