@@ -7,16 +7,16 @@ services:
       - /etc/passwd:/etc/passwd:cached
       - /etc/group:/etc/group:cached
       - .:/app:cached
+    env_file:
+      - "./.env"
     depends_on:
       - db
-    networks:
-      - default_network
   db:
-    image: postgres:12
+    image: postgres:13
     volumes:
       - "./pg_data/:/var/lib/postgresql/data"
-    networks:
-      - default_network
-
-networks:
-  default_network:
+      - "./postgresql.conf:/etc/postgresql/postgresql.conf"
+    env_file:
+      - "./.env"
+    ports:
+    - "5432:5432"
