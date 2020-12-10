@@ -62,6 +62,12 @@ error (default=6)
 - `Docker`; `docker-compose`
 - **or** locally installed and configured `python3.6+`, `python3.6+-dev`, `postgres`
 
+### Todos
+- Implement all TODO-s in code
+- Create Logger instance in each file
+- Add support `--depth` in `get` method
+- Add validation of URLs (validator already in code but unused)
+
 [badge_build]:https://github.com/avtocod/python-developer-test-task/workflows/CI/badge.svg
 [badge_language]:https://img.shields.io/badge/python-3-yellow?longCache=true
 [badge_docker]:https://img.shields.io/badge/docker-enable-blue?longCache=true
