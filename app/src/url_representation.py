@@ -26,6 +26,11 @@ class AbstractURL(ABC):
     def related_urls(self) -> Iterable[str]:
         pass
 
+    @property
+    @abstractmethod
+    def title(self) -> str:
+        pass
+
     @staticmethod
     def prepare_url(url: str) -> str:
         url_ = url
