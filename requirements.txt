@@ -3,3 +3,5 @@ aiohttp
 beautifulsoup4
 validator_collection
 memory_profiler
+psycopg2-binary
+sqlalchemy
