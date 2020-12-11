@@ -27,12 +27,12 @@ db = create_engine(
 Base = declarative_base()
 
 
-class ModelAdvanced(object):
+class ModelAnnotation(object):
     __table__: Table
     __tablename__: str
 
 
-class ModelURL(Base, ModelAdvanced):
+class ModelURL(Base, ModelAnnotation):
     __tablename__ = "url"
 
     name = Column(String, primary_key=True)
@@ -47,8 +47,8 @@ class ModelURL(Base, ModelAdvanced):
         query: Query = session.query(ModelURL) \
             .filter(values['name'] == ModelURL.name)
 
-        for record in query:
-            del values['name']
+        for _ in query:
+            del values['name']  # because of primary key
             query.update(values)
 
             break
