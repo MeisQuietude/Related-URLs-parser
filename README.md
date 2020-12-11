@@ -44,10 +44,10 @@ error (default=6)
 - `get` - select from DB URLs that are in HTML of input URL
 
 ### How to use
-- `docker-compose pull`
-- `docker-compose build`
-- `docker-compose up -d db`
-- `docker-compose run app python index.py *args`
+1. `docker-compose pull`
+1. `docker-compose build`
+1. `docker-compose up -d db`
+1. `docker-compose run app python index.py *args`
 
 #### Example of run
 - `docker-compose run app python index.py load https://www.lookout.net --depth 2 --log-level=info`
