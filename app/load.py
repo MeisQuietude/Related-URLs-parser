@@ -6,7 +6,7 @@ from app import AppProvider
 from app.src import Logger, session
 from app.src.api import API
 from app.src.dbapi import ModelURL
-from app.src.memory_usage import track_memory_decorator
+from app.src.metrics import get_time_mem_metric
 from app.src.parser import ParserBS, AbstractParser
 from app.src.url_representation import AbstractURLRepresentation, \
     URLRepresentation
@@ -34,7 +34,7 @@ class CLILoadProvider(AppProvider):
 
         self.load()
 
-    @track_memory_decorator
+    @get_time_mem_metric
     def load(self):
         """
         Expected:
