@@ -21,10 +21,8 @@ class CLILoadProvider(AppProvider):
 
     parser: AbstractParser = ParserBS
 
-    # Clear sometimes to optimize memory usage
     urls_map: Dict[str, AbstractURLRepresentation] = {}
     urls_map_by_depth: Dict[int, List[str]] = defaultdict(list)
-
     urls_map_is_parsed: Dict[str, bool] = {}
 
     def __init__(self):
@@ -181,8 +179,3 @@ class CLILoadProvider(AppProvider):
             html_parsed=html_parsed,
             allow_external_urls=self.cli_arguments.allow_external_urls
         )
-
-    @staticmethod
-    def print_urls_map(urls_map: type(urls_map)):
-        print(*(f"{url_str}: {url.title}" for url_str, url in urls_map.items()),
-              sep="\n")
