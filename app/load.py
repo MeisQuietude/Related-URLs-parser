@@ -70,7 +70,7 @@ class CLILoadProvider(AppProvider):
         session.commit()
 
         if self.cli_arguments.depth == 0:
-            return self.urls_map  # TODO: change return to print function
+            return
 
         related_hrefs = self \
             .get_adjust_related_hrefs(self.start_url, html_parsed)
@@ -82,10 +82,7 @@ class CLILoadProvider(AppProvider):
             self.start_load_in_depth()
         )
 
-        # TODO: end with print function
-
     async def start_load_in_depth(self, current_depth: int = 1):
-        # TODO: Check for depth == 1 and improve for use with depth == 2
         urls_of_depth = self.urls_map_by_depth[current_depth]
         urls_of_depth_uniq = set(urls_of_depth)
 
