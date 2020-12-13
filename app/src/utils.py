@@ -5,11 +5,17 @@ from app.src.parser import AbstractParser
 
 
 class Utils(object):
+    """
+    Some methods that connect URLs and parsed HTML
+    """
 
     @staticmethod
     def get_adjust_related_hrefs(
         url: str, html_parsed: AbstractParser, allow_external_urls=False
     ) -> Iterable[str]:
+        """
+        Get related URLs from parsed HTML and adjust them
+        """
         related_hrefs = Utils \
             .get_related_absolute_urls(url, html_parsed)
         related_hrefs = [URL.prepare_url(href) for href in related_hrefs]
@@ -25,12 +31,13 @@ class Utils(object):
         url_src: str, parser: AbstractParser
     ) -> Iterable[str]:
         """
-        Get URLs from parsed HTML,
-        convert relative URLs to absolute URLs
+        Get related URLs from parsed HTML and convert them into absolute
         """
         collection = parser.get_related_anchors_href()
+
         collection_updated = Utils \
             .convert_relative_to_absolute_hrefs(url_src, collection)
+
         return collection_updated
 
     @staticmethod
@@ -40,10 +47,9 @@ class Utils(object):
         """
         Convert relative URLs ('/link') to absolute ('https://domain/link')
         """
-
         # TODO: we should return input type instead of hard return List
 
-        def _convert(href):
+        def _convert(href: str) -> str:
             if href.startswith("/"):
                 href = url_src + href
             return href
