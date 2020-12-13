@@ -1,6 +1,6 @@
 import asyncio
 from collections import defaultdict
-from typing import Dict, Iterable, Callable, List
+from typing import Dict, Iterable, List
 
 from memory_profiler import memory_usage
 
@@ -18,6 +18,8 @@ class CLILoadProvider(AppProvider):
     """
     Provider between CLI, API & Database
     """
+
+    parser: AbstractParser = ParserBS
 
     # Clear sometimes to optimize memory usage
     urls_map: Dict[str, AbstractURL] = {}
@@ -52,7 +54,7 @@ class CLILoadProvider(AppProvider):
             return
 
         html_raw = response.text
-        html_parsed = ParserBS(html_raw)
+        html_parsed = self.parser(html_raw)
 
         url_data = URL(self.start_url, html_parsed)
         self.urls_map[self.start_url] = url_data
@@ -114,7 +116,7 @@ class CLILoadProvider(AppProvider):
                     .filter(ModelURL.name == url) \
                     .limit(1)
                 for record in q_:
-                    parsed_url = ParserBS(record.html)
+                    parsed_url = self.parser(record.html)
                     self.urls_map[url] = URL(url, parsed_url)
                     break
                 else:
@@ -164,7 +166,7 @@ class CLILoadProvider(AppProvider):
         """
         Create ParserURL object and store it in memory
         """
-        html_parsed = ParserBS(html)
+        html_parsed = self.parser(html)
         related_urls = self.get_adjust_related_hrefs(url, html_parsed)
 
         parsed_url = URL(

@@ -3,11 +3,13 @@ from sqlalchemy.orm import Query
 from app import AppProvider, URL
 from app.src import session, Logger
 from app.src.dbapi import ModelURL
-from app.src.parser import ParserBS
+from app.src.parser import ParserBS, AbstractParser
 from app.src.utils import Utils
 
 
 class CmdGetProvider(AppProvider):
+    parser: AbstractParser = ParserBS
+
     def __init__(self):
         super().__init__()
         self.get()
@@ -30,7 +32,7 @@ class CmdGetProvider(AppProvider):
         for url in query:
             Logger.info(f"Get related URLs for {url.name}: {url.title}")
 
-            html_parsed = ParserBS(url.html)
+            html_parsed = self.parser(url.html)
             related_urls = Utils.get_adjust_related_hrefs(url.name, html_parsed)
             query_related = session.query(
                 ModelURL.name, ModelURL.title, ModelURL.html
