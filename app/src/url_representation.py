@@ -4,7 +4,7 @@ from typing import Iterable
 from app.src.parser import AbstractParser
 
 
-class AbstractURL(ABC):
+class AbstractURLRepresentation(ABC):
 
     @property
     @abstractmethod
@@ -41,14 +41,14 @@ class AbstractURL(ABC):
         return url_
 
 
-class URL(AbstractURL):
+class URLRepresentation(AbstractURLRepresentation):
 
     def __init__(
         self,
         url: str,
         html_parsed: AbstractParser, related_urls: Iterable[str] = None
     ):
-        self._url = URL.prepare_url(url)
+        self._url = URLRepresentation.prepare_url(url)
         self._html_parsed = html_parsed
         self._related_urls = related_urls or []
 

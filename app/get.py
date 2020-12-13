@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Query
 
-from app import AppProvider, URL
+from app import AppProvider, URLRepresentation
 from app.src import session, Logger
 from app.src.dbapi import ModelURL
 from app.src.parser import ParserBS, AbstractParser
@@ -21,7 +21,7 @@ class CmdGetProvider(AppProvider):
         Allowed parameters (CLI):
         - (-n, --limit) - a number of URLs
         """
-        url_input = URL.prepare_url(self.cli_arguments.url)
+        url_input = URLRepresentation.prepare_url(self.cli_arguments.url)
 
         query: Query = session.query(
             ModelURL.name, ModelURL.title, ModelURL.html

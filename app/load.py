@@ -9,7 +9,7 @@ from app.src import Logger, session
 from app.src.api import API
 from app.src.dbapi import ModelURL
 from app.src.parser import ParserBS, AbstractParser
-from app.src.url_representation import AbstractURL, URL
+from app.src.url_representation import AbstractURLRepresentation, URLRepresentation
 from app.src.url_serializer import URLSerializer
 from app.src.utils import Utils
 
@@ -22,7 +22,7 @@ class CLILoadProvider(AppProvider):
     parser: AbstractParser = ParserBS
 
     # Clear sometimes to optimize memory usage
-    urls_map: Dict[str, AbstractURL] = {}
+    urls_map: Dict[str, AbstractURLRepresentation] = {}
     urls_map_by_depth: Dict[int, List[str]] = defaultdict(list)
 
     urls_map_is_parsed: Dict[str, bool] = {}
@@ -56,7 +56,7 @@ class CLILoadProvider(AppProvider):
         html_raw = response.text
         html_parsed = self.parser(html_raw)
 
-        url_data = URL(self.start_url, html_parsed)
+        url_data = URLRepresentation(self.start_url, html_parsed)
         self.urls_map[self.start_url] = url_data
         self.urls_map_by_depth[0] = [self.start_url]
 
@@ -114,7 +114,7 @@ class CLILoadProvider(AppProvider):
                     .limit(1)
                 for record in q_:
                     parsed_url = self.parser(record.html)
-                    self.urls_map[url] = URL(url, parsed_url)
+                    self.urls_map[url] = URLRepresentation(url, parsed_url)
                     break
                 else:
                     Logger.error(f"Something wrong with {url}")
@@ -150,7 +150,7 @@ class CLILoadProvider(AppProvider):
         for response in responses:  # Probably large memory usage here
             if response is None:
                 continue
-            url = URL.prepare_url(response.url.__str__())
+            url = URLRepresentation.prepare_url(response.url.__str__())
             html = response.html  # Initialized in API class
 
             self.parse_memsave_url(url, html)
@@ -159,14 +159,14 @@ class CLILoadProvider(AppProvider):
 
         return parsed_urls
 
-    def parse_memsave_url(self, url: str, html: str) -> URL:
+    def parse_memsave_url(self, url: str, html: str) -> URLRepresentation:
         """
         Create ParserURL object and store it in memory
         """
         html_parsed = self.parser(html)
         related_urls = self.get_adjust_related_hrefs(url, html_parsed)
 
-        parsed_url = URL(
+        parsed_url = URLRepresentation(
             url=url, html_parsed=html_parsed, related_urls=related_urls
         )
         self.urls_map[url] = parsed_url

@@ -1,6 +1,6 @@
 from typing import Iterable, Callable
 
-from app import URL
+from app import URLRepresentation
 from app.src.parser import AbstractParser
 
 
@@ -18,7 +18,7 @@ class Utils(object):
         """
         related_hrefs = Utils \
             .get_related_absolute_urls(url, html_parsed)
-        related_hrefs = [URL.prepare_url(href) for href in related_hrefs]
+        related_hrefs = [URLRepresentation.prepare_url(href) for href in related_hrefs]
 
         if not allow_external_urls:
             related_hrefs = Utils \

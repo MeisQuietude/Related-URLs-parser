@@ -1,10 +1,10 @@
-from app import URL
+from app import URLRepresentation
 
 
 class URLSerializer(object):
 
     def __init__(self, url: str, title: str, html: str):
-        self.url = URL.prepare_url(url)
+        self.url = URLRepresentation.prepare_url(url)
         self.title = URLSerializer.prepare_title(title)
         self.html = html
 
