@@ -46,12 +46,17 @@ error (default=6)
 ### How to use
 1. `docker-compose pull`
 1. `docker-compose build`
-1. `docker-compose up -d db`
-1. `docker-compose run app python index.py *args`
+1. Docker way
+    1. `docker-compose run app python index.py *args`
+1. Shell way
+    1. `sudo chmod +x ./spider.sh`
+    1. `./spider.sh *args`
 
 #### Example of run
 - `docker-compose run app python index.py load https://www.lookout.net --depth 2 --log-level=info`
+- `./spider.sh load https://www.lookout.net --depth 2 --log-level=info`
 - `docker-compose run app python index.py get https://www.lookout.net -n 0`
+- `./spider.sh get https://www.lookout.net -n 0`
 
 ### Pay attention
 - Argument `--depth` is limited only depends on your RAM
