@@ -2,14 +2,14 @@ import asyncio
 from collections import defaultdict
 from typing import Dict, Iterable, List
 
-from memory_profiler import memory_usage
-
 from app import AppProvider
 from app.src import Logger, session
 from app.src.api import API
 from app.src.dbapi import ModelURL
+from app.src.memory_usage import track_memory_decorator
 from app.src.parser import ParserBS, AbstractParser
-from app.src.url_representation import AbstractURLRepresentation, URLRepresentation
+from app.src.url_representation import AbstractURLRepresentation, \
+    URLRepresentation
 from app.src.url_serializer import URLSerializer
 from app.src.utils import Utils
 
@@ -32,11 +32,9 @@ class CLILoadProvider(AppProvider):
         self.bounded_semaphore = \
             asyncio.BoundedSemaphore(self.cli_arguments.bounded_semaphore)
 
-        Logger.info(
-            f"Peak memory usage: "
-            f"{max(memory_usage(proc=self.load, max_iterations=1))} MiB"
-        )
+        self.load()
 
+    @track_memory_decorator
     def load(self):
         """
         Expected:
