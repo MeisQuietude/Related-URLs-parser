@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from functools import cached_property
 from typing import Set, Iterable
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, ResultSet
 
 
 class AbstractParser(ABC):
@@ -38,15 +38,16 @@ class ParserBS(AbstractParser):
         self.html_parsed = BeautifulSoup(html_raw, parser_bs_type)
 
     @property
-    def html_raw(self):
+    def html_raw(self) -> str:
         return self.html_parsed.__str__()
 
     @cached_property
-    def title(self):
-        return self.html_parsed.find("title").text
+    def title(self) -> str:
+        title = self.html_parsed.find("title")
+        return title and title.text or ""
 
     @cached_property
-    def anchor_nodes(self) -> Iterable:
+    def anchor_nodes(self) -> Iterable[ResultSet]:
         return self.html_parsed.find_all("a", attrs={"href": True})
 
     def get_related_anchors_href(self) -> Iterable[str]:
