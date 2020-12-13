@@ -79,6 +79,9 @@ class CLILoadProvider(AppProvider):
         )
 
     async def start_load_in_depth(self, current_depth: int = 1):
+        Logger.info(f"Compute load in depth {current_depth}"
+                    f", please wait a couple of time...")
+
         urls_of_depth = self.urls_map_by_depth[current_depth]
         urls_of_depth_uniq = set(urls_of_depth)
 
@@ -95,41 +98,48 @@ class CLILoadProvider(AppProvider):
             f"new - {len(urls_to_load)})"
         )
 
-        # Request & parse URLs
-        parsed_urls = await \
-            self.request_and_parse_related_urls_async(urls_to_load)
+        # Memory optimization
+        batch_limit = 100
+        for batch_offset in range(len(urls_to_load) // batch_limit + 1):
+            start = batch_offset * batch_limit
+            end = start + batch_limit
+            batch_to_load = urls_to_load[start:end]
 
-        # Save in memory & db
-        for url in set(parsed_urls):
+            # Request & parse URLs
+            parsed_urls = await \
+                self.request_and_parse_related_urls_async(batch_to_load)
 
-            parsed_url = self.urls_map.get(url, None)
-            if parsed_url is None:
-                # Check the store in DB
-                q_ = session.query(ModelURL) \
-                    .filter(ModelURL.name == url) \
-                    .limit(1)
-                for record in q_:
-                    parsed_url = self.parser(record.html)
-                    self.urls_map[url] = URLRepresentation(url, parsed_url)
-                    break
-                else:
-                    Logger.error(f"Something wrong with {url}")
+            # Save in memory & db
+            for url in set(parsed_urls):
 
-            self.urls_map_by_depth[current_depth + 1].extend(
-                self.get_adjust_related_hrefs(
-                    url, parsed_url.html_parsed
+                parsed_url = self.urls_map.get(url, None)
+                if parsed_url is None:
+                    # Check the store in DB
+                    q_ = session.query(ModelURL) \
+                        .filter(ModelURL.name == url) \
+                        .limit(1)
+                    for record in q_:
+                        parsed_url = self.parser(record.html)
+                        self.urls_map[url] = URLRepresentation(url, parsed_url)
+                        break
+                    else:
+                        Logger.error(f"Something wrong with {url}")
+
+                self.urls_map_by_depth[current_depth + 1].extend(
+                    self.get_adjust_related_hrefs(
+                        url, parsed_url.html_parsed
+                    )
                 )
-            )
-            self.urls_map_is_parsed[url] = True
+                self.urls_map_is_parsed[url] = True
 
-            ModelURL.upsert(
-                **URLSerializer(
-                    url, parsed_url.title, parsed_url.html_raw
-                ).__repr__()
-            )
+                ModelURL.upsert(
+                    **URLSerializer(
+                        url, parsed_url.title, parsed_url.html_raw
+                    ).__repr__()
+                )
 
-            del self.urls_map[url]
-        session.commit()
+                del self.urls_map[url]
+            session.commit()
 
         del self.urls_map_by_depth[current_depth]
 
