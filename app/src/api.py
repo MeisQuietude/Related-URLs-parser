@@ -27,7 +27,7 @@ class API(object):
                 ssl=None,
                 enable_cleanup_closed=True
             ),
-            timeout=ClientTimeout(60)
+            timeout=ClientTimeout(10),
         ) as session:
             tasks = [
                 API.__async__fetch_url(session, url, bounded_semaphore)
@@ -46,7 +46,9 @@ class API(object):
     ) -> aiohttp.ClientResponse:
         try:
             async with \
-                bounded_semaphore, session.get(url, allow_redirects=True) \
+                bounded_semaphore, session.get(
+                    url, allow_redirects=True, timeout=ClientTimeout(10)
+                ) \
                     as response:
                 # I should not probably await anything here
                 response.html = await response.text(encoding="utf-8")
