@@ -13,7 +13,7 @@ COPY ./requirements-dev.txt ${APP_DIR}/requirements-dev.txt
 
 RUN pip install --no-cache-dir -r ${APP_DIR}/requirements.txt -r ${APP_DIR}/requirements-dev.txt
 
-COPY ./parser ./parser
+COPY sitemapgen ./parser
 COPY ./tests ./tests
 
 USER parser

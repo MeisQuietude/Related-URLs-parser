@@ -11,18 +11,30 @@ services:
       - "./.env"
     depends_on:
       - db
+    networks:
+      - app-net
   db:
     image: postgres:13
     volumes:
       - "./resources/postgres/pg_data/:/var/lib/postgresql/data"
       - "./resources/postgres/postgresql.conf:/etc/postgresql/postgresql.conf"
-    env_file:
-      - "./.env"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
+    networks:
+      - app-net
   adminer:
     image: adminer
     ports:
       - "8080:8080"
+    networks:
+      - app-net
     depends_on:
       - db
+
+networks:
+  app-net:
+    driver: bridge

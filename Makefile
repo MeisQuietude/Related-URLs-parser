@@ -14,8 +14,14 @@ help: ## Show this help
 	@printf "\033[33m%s:\033[0m\n" 'Available commands'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[32m%-14s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
+app-help:
+	$(dc_bin) run --rm app python -m parser --help
+
 test: ## Execute tests
 	$(dc_bin) run --rm app pytest
 
 lint:
 	$(dc_bin) run --rm app flake8 parser
+
+wip:
+	docker-compose run --rm app python -m sitemapgen generate --depth 2 https://httpbin.org

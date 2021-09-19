@@ -1,7 +1,7 @@
 import logging
 
-from parser.src.cli import args
-from parser.src.dbapi import session
+from sitemapgen.src.cli import args
+from sitemapgen.src.dbapi import session
 
 debug_msg_format = (
     "[%(asctime)s] "

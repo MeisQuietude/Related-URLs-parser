@@ -2,16 +2,16 @@ import asyncio
 from collections import defaultdict
 from typing import Dict, Iterable, List
 
-from parser import AppProvider
-from parser.src import Logger, session
-from parser.src.api import API
-from parser.src.dbapi import ModelURL
-from parser.src.metrics import get_time_mem_metric
-from parser.src.parser import ParserBS, AbstractParser
-from parser.src.url_representation import AbstractURLRepresentation, \
+from sitemapgen import AppProvider
+from sitemapgen.src import Logger, session
+from sitemapgen.src.api import API
+from sitemapgen.src.dbapi import ModelURL
+from sitemapgen.src.metrics import get_time_mem_metric
+from sitemapgen.src.parser import ParserBS, AbstractParser
+from sitemapgen.src.url_representation import AbstractURLRepresentation, \
     URLRepresentation
-from parser.src.url_serializer import URLSerializer
-from parser.src.utils import Utils
+from sitemapgen.src.url_serializer import URLSerializer
+from sitemapgen.src.utils import Utils
 
 
 class CLILoadProvider(AppProvider):
