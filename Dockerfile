@@ -1,27 +1,21 @@
-FROM ubuntu:20.10
+FROM python:3.9.7-slim-buster
+LABEL Description="Parse hyperlinks" Vendor="mail@s-savelyev.ru"
 
-COPY ./requirements.txt ./requirements-dev.txt ./package_list.txt /app/
+RUN groupadd --system parser && useradd --no-log-init --shell /bin/false --system --gid parser parser
 
-WORKDIR /app
+ENV TZ='Europe/Moscow'
+ENV APP_DIR=/app
 
-USER root
+WORKDIR ${APP_DIR}
 
-CMD ["bash"]
+COPY ./requirements.txt ${APP_DIR}/requirements.txt
+COPY ./requirements-dev.txt ${APP_DIR}/requirements-dev.txt
 
-RUN set -x; \
-    apt-get update \
-    && apt-get install $(cat package_list.txt) -y --no-install-recommends \
-    && apt-get clean
+RUN pip install --no-cache-dir -r ${APP_DIR}/requirements.txt -r ${APP_DIR}/requirements-dev.txt
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10
+COPY ./parser ./parser
+COPY ./tests ./tests
 
-RUN python -m pip install -r requirements.txt -r requirements-dev.txt
+USER parser
 
-RUN groupadd -r parse_user -g 901 \
-    && useradd -u 901 -r -g parse_user --shell=/bin/bash parse_user
-
-COPY . .
-
-USER parse_user
-
-CMD ["python"]
+CMD ["python", "-m", "parser"]

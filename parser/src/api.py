@@ -5,7 +5,7 @@ import aiohttp
 import requests
 from aiohttp import ClientTimeout
 
-from app.src import Logger
+from parser.src import Logger
 
 
 class API(object):

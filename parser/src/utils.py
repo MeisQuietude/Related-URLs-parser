@@ -1,7 +1,7 @@
 from typing import Iterable, Callable
 
-from app import URLRepresentation
-from app.src.parser import AbstractParser
+from parser import URLRepresentation
+from parser.src.parser import AbstractParser
 
 
 class Utils(object):

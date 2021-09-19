@@ -1,4 +1,4 @@
-from app import URLRepresentation
+from parser import URLRepresentation
 
 
 class URLSerializer(object):

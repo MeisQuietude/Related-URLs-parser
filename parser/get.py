@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Query
 
-from app import AppProvider, URLRepresentation
-from app.src import session, Logger
-from app.src.dbapi import ModelURL
-from app.src.parser import ParserBS, AbstractParser
-from app.src.utils import Utils
+from parser import AppProvider, URLRepresentation
+from parser.src import session, Logger
+from parser.src.dbapi import ModelURL
+from parser.src.parser import ParserBS, AbstractParser
+from parser.src.utils import Utils
 
 
 class CmdGetProvider(AppProvider):

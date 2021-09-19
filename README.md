@@ -7,7 +7,7 @@
 
 ### Usage
 
-```
+```text
 usage: index.py [-h] [-d DEPTH] [-n LIMIT] [--allow-external-urls]
 [--log-level {debug,info,warning,error}]
 [--requests-batch-limit BOUNDED_SEMAPHORE]

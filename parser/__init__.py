@@ -1,7 +1,7 @@
 from abc import ABC
 
-from app.src import args
-from app.src.url_representation import URLRepresentation
+from parser.src import args
+from parser.src.url_representation import URLRepresentation
 
 
 class AppProvider(ABC):

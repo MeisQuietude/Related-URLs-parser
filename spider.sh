@@ -1,1 +1,1 @@
-docker-compose run app python index.py "$@"
+docker-compose run --rm app python -m parser "$@"
