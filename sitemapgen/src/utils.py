@@ -1,7 +1,7 @@
 from typing import Iterable, Callable
 
-from app import URLRepresentation
-from app.src.parser import AbstractParser
+from sitemapgen import URLRepresentation
+from sitemapgen.src.parser import AbstractParser
 
 
 class Utils(object):
@@ -47,6 +47,7 @@ class Utils(object):
         """
         Convert relative URLs ('/link') to absolute ('https://domain/link')
         """
+
         # TODO: we should return input type instead of hard return List
 
         def _convert(href: str) -> str:

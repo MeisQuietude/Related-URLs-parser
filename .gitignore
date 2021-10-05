@@ -53,5 +53,8 @@ ENV/
 env.bak/
 venv.bak/
 
+.idea/
+pg_data/
+
 # mypy
 .mypy_cache/

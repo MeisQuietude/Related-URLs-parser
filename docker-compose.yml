@@ -1,22 +1,40 @@
-version: '3.2'
+version: '3.7'
 
 services:
   app:
-    build: .
+    build:
+      dockerfile: Dockerfile
+      context: .
     volumes:
-      - /etc/passwd:/etc/passwd:cached
-      - /etc/group:/etc/group:cached
       - .:/app:cached
     env_file:
       - "./.env"
     depends_on:
       - db
+    networks:
+      - app-net
   db:
     image: postgres:13
     volumes:
-      - "./pg_data/:/var/lib/postgresql/data"
-      - "./postgresql.conf:/etc/postgresql/postgresql.conf"
-    env_file:
-      - "./.env"
+      - "./resources/postgres/pg_data/:/var/lib/postgresql/data"
+      - "./resources/postgres/postgresql.conf:/etc/postgresql/postgresql.conf"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-    - "5432:5432"
+      - "5432:5432"
+    networks:
+      - app-net
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+    depends_on:
+      - db
+
+networks:
+  app-net:
+    driver: bridge

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Iterable
 
-from app.src.parser import AbstractParser
+from sitemapgen.src.parser import AbstractParser
 
 
 class AbstractURLRepresentation(ABC):

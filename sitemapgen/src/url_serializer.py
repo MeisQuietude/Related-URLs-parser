@@ -1,4 +1,4 @@
-from app import URLRepresentation
+from sitemapgen import URLRepresentation
 
 
 class URLSerializer(object):

@@ -5,7 +5,7 @@ import aiohttp
 import requests
 from aiohttp import ClientTimeout
 
-from app.src import Logger
+from sitemapgen.src import Logger
 
 
 class API(object):
@@ -47,9 +47,9 @@ class API(object):
         try:
             async with \
                 bounded_semaphore, session.get(
-                    url, allow_redirects=True, timeout=ClientTimeout(10)
-                ) \
-                    as response:
+                url, allow_redirects=True, timeout=ClientTimeout(10)
+            ) \
+                as response:
                 # I should not probably await anything here
                 response.html = await response.text(encoding="utf-8")
                 Logger.info(f"{response.url.__str__()} - {response.status}")
