@@ -1,4 +1,4 @@
-FROM python:3.9.7-slim-buster
+FROM python:3.10.3-slim-buster
 LABEL Description="Parse hyperlinks" Vendor="mail@s-savelyev.ru"
 
 RUN groupadd --system parser && useradd --no-log-init --shell /bin/false --system --gid parser parser
